@@ -69,13 +69,16 @@
 ;     (test (alternating (list 1 2 3 4)) (list 2 4))
 ;     (test (alternating (list "hi" "there" "mom")) (list "there"))
 
-(define (alternating objs [alt : boolean])
-  (cond [(empty? objs) empty]
-        [alt (append (list (first objs)) (alternating (rest objs) #f))]
-        [else (alternating (rest objs) #t)]))
+(define (alternating objs)
+  (alternating2 objs #f))
 
-(test (alternating (list 1 2 3 4) #f) (list 2 4))
-(test (alternating (list "hi" "there" "mom") #f) (list "there"))
+(define (alternating2 objs [alt : boolean])
+  (cond [(empty? objs) empty]
+        [alt (append (list (first objs)) (alternating2 (rest objs) #f))]
+        [else (alternating2 (rest objs) #t)]))
+
+(test (alternating (list 1 2 3 4)) (list 2 4))
+(test (alternating (list "hi" "there" "mom")) (list "there"))
 
 ; Problem #6 (1 pt)
 ;
@@ -158,15 +161,18 @@
 ; may never show up in the list. It may also show up multiple times, but all
 ; occurrences past the first one should be ignored
 
-(define (rainfall [nums : (listof number)] [sumnow? : boolean]) : number
+(define (rainfall [nums : (listof number)]) : number
+  (rainfall2 nums #f))
+
+(define (rainfall2 [nums : (listof number)] [sumnow? : boolean]) : number
   (cond [(empty? nums) 0]
         [sumnow? (/ (sum (filter (lambda (n) (>= n 0)) nums)) (length (filter (lambda (n) (>= n 0)) nums)))]
-        [else (cond [(= (first nums) -999) (rainfall (rest nums) #t)]
-                    [else (rainfall (rest nums) #f)])]))
+        [else (cond [(= (first nums) -999) (rainfall2 (rest nums) #t)]
+                    [else (rainfall2 (rest nums) #f)])]))
 
-(test (rainfall (list 4 -999 8 7 -999 3 -47) #f)
+(test (rainfall (list 4 -999 8 7 -999 3 -47))
       (/ (sum (filter (lambda (n) (>= n 0)) (list 8 7 3))) (length (filter (lambda (n) (>= n 0))(list 8 7 3)))))
-(test (rainfall (list 8 0 123) #f)
+(test (rainfall (list 8 0 123))
       0)
 
 
