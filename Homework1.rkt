@@ -1,5 +1,7 @@
 #lang plai-typed
 
+; Maximilian Thompson
+
 ; Problem #1 (0.5 pts)
 ;
 ; Write a function sum which takes a list of numbers and produces
